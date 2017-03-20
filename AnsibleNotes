@@ -1,0 +1,53 @@
+ansible lamp -m ping --user ec2-user
+
+#config file is by default taken from the location of terminal pwd, so run below from config file locaiton
+# -i is for inventory file location, default is /etc/ansible/hosts
+#ANSIBLE_CONFIG=/custom/config/file (environment variable is highest priority)
+
+#Local Inventory from hosts file, default inventory hosts file is at /etc/ansible/hosts
+cd /home/swansh/github/ansible/config && ansible lamp:test -m ping -i /home/swansh/github/ansible/config/hosts
+
+#Dynamic inventory
+cd /home/swansh/github/ansible/config && ansible tag_Owner_ansible -i /home/swansh/github/ansible/aws/ec2.py -m ping -u ubuntu
+# ec2.py file
+python ec2.py --list | grep ec2_dns_name
+
+#Run EC2 dynamic inventory
+ansible tag_Inventory_rhel -i /home/swansh/github/ansible/aws/ec2.py -m ping -u ec2-user --private-key /home/swansh/.ssh/akshay_ec2_key.pem
+ansible tag_Inventory_ubuntu -i /home/swansh/github/ansible/aws/ec2.py -m ping -u ubuntu --private-key /home/swansh/.ssh/akshay_ec2_key.pem
+
+#OR Run below without passing --private-key as it will take keys from defualt config file at /etc/ansible/ansible.cfg
+ansible tag_Inventory_rhel -i /home/swansh/github/ansible/aws/ec2.py -m ping -u ec2-user
+ansible tag_Inventory_ubuntu -i /home/swansh/github/ansible/aws/ec2.py -m ping -u ubuntu
+
+# sudo make install : to install from source
+# -vvvv to see detailed message from ansible, -v for verbose, -vvv for more verbose
+#ANSIBLE_DEBUG=1
+
+
+#Inventory file, ansible_user will make ssh work with that user. You can't ssh as root user on EC2. Same this is being passed as "-u ubuntu" in above examples
+
+[lamp]
+ec2-34-207-223-137.compute-1.amazonaws.com ansible_user=ec2-user
+
+[test]
+ec2-34-207-223-137.compute-1.amazonaws.com ansible_user=ec2-user
+ec2-52-204-86-224.compute-1.amazonaws.com ansible_user=ubuntu
+
+
+#Module
+
+Module: Individual unit of work
+
+ansible lamp -m service -a "name=apache2 state=started"
+ansible all -m command -a "/sbin/reboot -t now"
+
+#My custom Module Test
+source ansible/hacking/env-setup
+
+shell script example:
+/home/swansh/github/module-ansible/ansible/hacking/test-module -m simplemodule.sh -a "ext=py"
+
+python example:
+/home/swansh/github/module-ansible/ansible/hacking/test-module -m /home/swansh/github/ansible/module/basicmodule.py -a "dir=. ext=*.yaml"
+/home/swansh/github/module-ansible/ansible/hacking/test-module -m /home/swansh/github/ansible/module/basicmodule.py -a "dir=."
