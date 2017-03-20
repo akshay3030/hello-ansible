@@ -46,8 +46,8 @@ ansible all -m command -a "/sbin/reboot -t now"
 source ansible/hacking/env-setup
 
 shell script example:
-/home/swansh/github/module-ansible/ansible/hacking/test-module -m simplemodule.sh -a "ext=py"
+/home/swansh/github/ansible/hacking/test-module -m simplemodule.sh -a "ext=py"
 
 python example:
-/home/swansh/github/module-ansible/ansible/hacking/test-module -m /home/swansh/github/ansible/module/basicmodule.py -a "dir=. ext=*.yaml"
-/home/swansh/github/module-ansible/ansible/hacking/test-module -m /home/swansh/github/ansible/module/basicmodule.py -a "dir=."
+/home/swansh/github/ansible/hacking/test-module -m /home/swansh/github/hello-ansible/module/basicmodule.py -a "dir=. ext=*.yaml"
+/home/swansh/github/ansible/hacking/test-module -m /home/swansh/github/hello-ansible/module/basicmodule.py -a "dir=."
